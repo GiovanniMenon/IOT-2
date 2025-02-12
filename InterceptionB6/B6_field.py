@@ -18,32 +18,22 @@ PORT = 5030
 def get_context():
     slaves = {
         1: ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
             hr=ModbusSequentialDataBlock(0, [10] * 100), 
             ir=ModbusSequentialDataBlock(0, [20] * 100), 
         ),
         5: ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
             hr=ModbusSequentialDataBlock(0, [30] * 100),
             ir=ModbusSequentialDataBlock(0, [40] * 100),
         ),
         56: ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
             hr=ModbusSequentialDataBlock(0, [50] * 100),
             ir=ModbusSequentialDataBlock(0, [60] * 100),
         ),
         77: ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
             hr=ModbusSequentialDataBlock(0, [70] * 100),
             ir=ModbusSequentialDataBlock(0, [80] * 100),
         ),
         190: ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
             hr=ModbusSequentialDataBlock(0, [90] * 100),
             ir=ModbusSequentialDataBlock(0, [10] * 100),
         ),
