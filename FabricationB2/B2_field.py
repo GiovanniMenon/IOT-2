@@ -5,6 +5,7 @@ from pymodbus.datastore.store import ModbusSparseDataBlock
 from pymodbus.server import StartAsyncTcpServer
 import logging
 import random
+import socket
 
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
@@ -14,7 +15,6 @@ log.setLevel(logging.DEBUG)
 
 LOCAL_ADDRESS = 'localhost'
 PORT = 5030
-
 
 def update_sensor(context):
     """After the master read the sensor register we change his stored number with a random one"""
