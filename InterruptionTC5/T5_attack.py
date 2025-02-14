@@ -20,7 +20,7 @@ def parse_modbus_response(response):
 
         # Extract PDU (Function Code + Data)
         function_code = response[index+7]
-        data = response[index+8: index+6+length]  # PDU Data section
+        data = response[index+8: index+6+length]
 
         print(f"\n **Modbus Frame {transaction_id}:**")
         print(f"   - Transaction ID: {transaction_id}")
