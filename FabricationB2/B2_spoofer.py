@@ -8,8 +8,7 @@ cap = pyshark.LiveCapture(interface='Adapter for loopback traffic capture', disp
 payload = None
 
 for packet in cap.sniff_continuously():
-    if 'Data' in packet:
-        if hasattr(packet, 'tcp') and hasattr(packet.tcp, 'payload'):
+        if hasattr(packet, 'tcp') and hasattr(packet, 'Data') and hasattr(packet.Data, 'Data'):
             payload = packet.Data.Data
             print(f"Packet Data: {payload}")
             break
@@ -21,7 +20,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.settimeout(60)
         sock.connect(("localhost", 5030))  # Connect to Modbus server
         print("Connected, replaying the message")
-        
+
         # Convert the cleaned string (which is now a valid hex string) to bytes
         raw_payload = bytes.fromhex(payload)  # Now this is valid hex
 
