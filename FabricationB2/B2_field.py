@@ -5,13 +5,12 @@ from pymodbus.datastore.store import ModbusSparseDataBlock
 from pymodbus.server import StartAsyncTcpServer
 import logging
 import random
-import socket
 
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
-#logging.basicConfig(format=FORMAT)
-#log = logging.getLogger()
-#log.setLevel(logging.DEBUG)
+logging.basicConfig(format=FORMAT)
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
 
 LOCAL_ADDRESS = 'localhost'
 PORT = 5030
@@ -19,9 +18,8 @@ PORT = 5030
 def update_sensor(context):
     """After the master read the sensor register we change his stored number with a random one"""
     value = random.randint(0, 100)  
-    print(value)
     context[0].setValues(3, 0, [value])  
-    # log.info(f"Sensor value updated: {value}")
+    log.info(f"Sensor value updated: {value}")
 
 async def master_task(host, port, interval, context):
     """
@@ -36,10 +34,10 @@ async def master_task(host, port, interval, context):
     while True:
         rr = await client.read_holding_registers(address=0, count=1, slave=1) 
         if not rr.isError():
-            #log.info(f"Master read value: {rr.registers}")
+            log.info(f"Master read value: {rr.registers}")
             update_sensor(context)
-        #else:
-            #log.error(f"Read error: {rr}")
+        else:
+            log.error(f"Read error: {rr}")
         await asyncio.sleep(interval)
 
 async def main():
