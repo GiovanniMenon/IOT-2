@@ -1,6 +1,5 @@
 from concurrent.futures import thread
 import socket
-import time
 import pyshark
 
 capture_filter = "tcp.port == 5030"
@@ -10,11 +9,9 @@ cap = pyshark.LiveCapture(interface='Adapter for loopback traffic capture', disp
 payload = None
 
 for packet in cap.sniff_continuously():
-    print(packet)
-    if 'TCP' in packet:
+    if 'Data' in packet:
         if hasattr(packet, 'tcp') and hasattr(packet.tcp, 'payload'):
-            payload = packet.tcp.payload
-            print(f"Found target data in packet: {packet}")
+            payload = packet.Data.Data
             print(f"Packet Data: {payload}")
 
             break
@@ -27,12 +24,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.connect(("localhost", 5030))  # Connect to Modbus server
         print("Connected, replaying the message")
         print(type(payload))
-
-        payload_str = str(payload)  # Convert LayerFieldsContainer to string
-        payload_str_clean = payload_str.replace(":", "")  # Remove colons
                 
         # Convert the cleaned string (which is now a valid hex string) to bytes
-        raw_payload = bytes.fromhex(payload_str_clean)  # Now this is valid hex
+        raw_payload = bytes.fromhex(payload)  # Now this is valid hex
 
         print(type(raw_payload))
         sock.sendall(raw_payload)  # Send invalid Modbus frame
