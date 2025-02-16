@@ -1,24 +1,23 @@
 import socket
 import pyshark
 
-capture_filter = "tcp.port == 5030"
+CAPTURE_FILTER = "tcp.port == 5030"
 
 # CHANGE THIS IF IT DOESN'T CORRESPOND TO THE INTERFACE FOR YOUR SYSTEM
 INTERFACE = 'Adapter for loopback traffic capture'
 LOCAL_ADDRESS = 'localhost'
 PORT = 5030
 
-cap = pyshark.LiveCapture(INTERFACE, display_filter=capture_filter)
+cap = pyshark.LiveCapture(INTERFACE, display_filter=CAPTURE_FILTER)
 
 payload = None
 
+# Check for a packet in TCP that carries Modbus data
 for packet in cap.sniff_continuously():
         if hasattr(packet, 'tcp') and hasattr(packet, 'Data') and hasattr(packet.Data, 'Data'):
             payload = packet.Data.Data
             print(f"Packet Data: {payload}")
             break
-
-print("found a packet with payload")
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     try:
