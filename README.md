@@ -11,7 +11,7 @@ IOT Project 2: MODBUS attacks implementation based on : [_"Attack taxonomies for
 - `Tshark` installed
 - `python 3.9.* >=`
 
-## How To Run Every Attack
+## How To Run Each Attack
 **Python scripts** have to be run on **separate terminals** in the **order** noted below 
 
 ### Interception (B6)
