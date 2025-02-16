@@ -10,8 +10,6 @@ from InterruptionTC5 import T5_attack as module
  # Send a write request to the Proxy to change value to True at address 0
 modbus_request = module.create_modbus_request(1, 1, 5, 0, 1, True)
 
-print(modbus_request)
-
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     sock.connect(("localhost", 5000))
 
