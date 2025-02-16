@@ -3,7 +3,7 @@ from pymodbus.client import AsyncModbusTcpClient
 
 async def send_modbus_request():
     """Connects to Modbus server and sends a request."""
-    client = AsyncModbusTcpClient("localhost", port=5030)
+    client = AsyncModbusTcpClient("localhost", port=5040)
     await client.connect()
 
     if client.connected:
