@@ -16,7 +16,7 @@ server_socket.listen(5)
 
 print(f"Proxy Server listening on {LOCAL_ADDRESS}:{PROXY_PORT}")
 
-# Listen for requests comming in to Proxy
+# Listen for requests coming in to Proxy
 while True:
     client_socket, client_address = server_socket.accept()
     print(f"Connection from {client_address}")
