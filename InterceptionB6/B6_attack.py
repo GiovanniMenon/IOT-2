@@ -104,16 +104,3 @@ if __name__ == "__main__":
     print("\n--------------|Result|--------------\nAddress\t\tID\tHolding Registers\n")
     for (host, port, slave_id), registers in devices_found.items():
         print(f"{host}:{port}\t{slave_id}\t{registers}")
-
-
-
-
-
-
-        
-
- 
-
-
-
-
