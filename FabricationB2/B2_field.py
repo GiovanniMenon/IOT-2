@@ -15,7 +15,6 @@ log.setLevel(logging.DEBUG)
 LOCAL_ADDRESS = 'localhost'
 PORT = 5030
 
-
 def update_sensor(context):
     """After the master read the sensor register we change his stored number with a random one"""
     value = random.randint(0, 100)  

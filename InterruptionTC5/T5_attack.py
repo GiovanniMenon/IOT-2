@@ -50,8 +50,10 @@ def parse_modbus_response(response):
         # Move to next frame in case multiple responses exist in a single TCP response
         index += 6 + length  # MBAP Header (6 bytes) + Data length
 
-def create_modbus_request(transaction_id, unit_id, function_code, start_address, num_registers):
-    protocol_id = 0x0000
+def create_modbus_request(transaction_id, unit_id, function_code, start_address, num_registers, value = None):
+    """Construct a Modbus TCP request frame."""
+    protocol_id = 0x0000  # Modbus Protocol
+    
     length = 6  # PDU length (Function Code + Address + Quantity = 6 bytes)
     
     request = (
@@ -63,6 +65,12 @@ def create_modbus_request(transaction_id, unit_id, function_code, start_address,
         start_address.to_bytes(2, byteorder='big') +
         num_registers.to_bytes(2, byteorder='big')
     )
+
+    # This is to write to a single coil. For that we use function_code = 5
+    if (function_code == 5 and value is not None):
+        value = 0xFF00 if value else 0x0000  # 0xFF00 = ON, 0x0000 = OFF
+        request += value.to_bytes(2, byteorder='big')
+
     return request
 
 def send_two_modbus_messages():
@@ -127,6 +135,7 @@ def send_malformed_modbus_request():
 
         except Exception as e:
             print(f"Error sending malformed Modbus request: {e}")
-
-send_two_modbus_messages()
-send_malformed_modbus_request()
+            
+if __name__ == "__main__":
+    send_two_modbus_messages()
+    send_malformed_modbus_request()

@@ -83,21 +83,11 @@ def parse_modbus_response(response):
         function_code = response[index+7]
         data = response[index+8: index+6+length]  # PDU Data section
 
-        # Print the extracted information
-        # print(f"\n🔹 **Modbus Frame {transaction_id}:**")
-        # print(f"   - Transaction ID: {transaction_id}")
-        # print(f"   - Protocol ID: {protocol_id} (Should be 0 for Modbus)")
-        # print(f"   - Length: {length} bytes")
-        # print(f"   - Unit ID (Slave Address): {unit_id}")
-        # print(f"   - Function Code: {function_code}")
-
         # Interpret the response based on the function code
         if function_code == 3:  # Read Holding Registers
             registers = [int.from_bytes(data[i:i+2], byteorder='big') for i in range(0, len(data), 2)]
             print(f"   - Register Values: {registers}")
             parsed_data = registers
-        # else:
-        #     print(f"   - Raw Data: {data.hex()} (Unknown function code {function_code})")
 
         # Move to next frame in case multiple responses exist in a single TCP response
         index += 6 + length  # MBAP Header (6 bytes) + Data length
