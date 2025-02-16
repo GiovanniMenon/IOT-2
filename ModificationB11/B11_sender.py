@@ -1,23 +1,26 @@
 import asyncio
-from pymodbus.client import AsyncModbusTcpClient
+import sys
+import os
+import socket
 
-async def send_modbus_request():
-    """Connects to Modbus server and sends a request."""
-    client = AsyncModbusTcpClient("localhost", port=5040)
-    await client.connect()
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-    if client.connected:
-        # Read 10 coils starting at address 0
-        response = await client.read_coils(address=0, count=1, slave=1)
-        
-        if response.isError():
-            print("Modbus Error:", response)
-        else:
-            print("Received Coils:", response.bits)
+from InterruptionTC5 import T5_attack as module
 
-    client.close()
+ # Two valid Modbus messages in a single TCP frame
+modbus_request = module.create_modbus_request(1, 1, 1, 0, 1)  # Read 10 registers from address 0
 
-# Run the async client
-asyncio.run(send_modbus_request())
+print(modbus_request)
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.connect(("localhost", 5000))
+    sock.sendall(modbus_request)  # Send both messages together
+
+    # Read response (assuming server can handle multiple messages in one frame)
+    received = sock.recv(1024)
+print("==========SENT==========")
+module.parse_modbus_response(modbus_request)
+print("==========RECEIVED==========")
+module.parse_modbus_response(received)
 
 

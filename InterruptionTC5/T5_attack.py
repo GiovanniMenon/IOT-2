@@ -133,6 +133,7 @@ def send_malformed_modbus_request():
 
         except Exception as e:
             print(f"Error sending malformed Modbus request: {e}")
-
-send_two_modbus_messages()
-send_malformed_modbus_request()
+            
+if __name__ == "__main__":
+    send_two_modbus_messages()
+    send_malformed_modbus_request()
