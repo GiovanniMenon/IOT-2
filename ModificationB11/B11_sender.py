@@ -21,7 +21,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     # Send message to the Proxy
     sock.sendall(modbus_request)
 
-    # Read response (assuming server can handle multiple messages in one frame)
+    # Read response
     received = sock.recv(1024)
 
 # Calculate seconds elapsed
